@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個人效率管理系統</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>個人效率管理系統</h1>
+        </header>
+
+        <main class="main-grid">
+            <!-- 時間顯示區域 -->
+            <section class="time-section card">
+                <div class="current-time">
+                    <div class="date-display" id="currentDate"></div>
+                    <div class="day-display" id="currentDay"></div>
+                    <div class="time-display" id="currentTime"></div>
+                </div>
+            </section>
+
+            <!-- 代辦事項 -->
+            <section class="todos-section card">
+                <div class="section-header">
+                    <h2>代辦事項</h2>
+                    <button class="btn btn--primary btn--sm" id="addTodoBtn">新增</button>
+                </div>
+                <div class="todos-list" id="todosList">
+                    <!-- 代辦事項將在此顯示 -->
+                </div>
+            </section>
+
+            <!-- 未繳交作業 -->
+            <section class="assignments-section card">
+                <div class="section-header">
+                    <h2>未繳交作業</h2>
+                    <button class="btn btn--primary btn--sm" id="addAssignmentBtn">新增</button>
+                </div>
+                <div class="assignments-list" id="assignmentsList">
+                    <!-- 作業列表將在此顯示 -->
+                </div>
+            </section>
+
+            <!-- 一週課表 -->
+            <section class="schedule-section card">
+                <div class="section-header">
+                    <h2>一週課表</h2>
+                    <input type="file" id="scheduleUpload" accept="image/*" class="hidden">
+                    <button class="btn btn--secondary btn--sm" id="uploadScheduleBtn">上傳圖片</button>
+                </div>
+                <div class="schedule-display" id="scheduleDisplay">
+                    <p class="upload-placeholder">點擊上傳課表圖片</p>
+                </div>
+            </section>
+
+            <!-- 月曆 -->
+            <section class="calendar-section card">
+                <div class="section-header">
+                    <h2>月份行程</h2>
+                    <div class="calendar-controls">
+                        <input type="number" id="calendarYear" class="form-control calendar-input" min="2000" max="2100">
+                        <select id="calendarMonth" class="form-control calendar-input">
+                            <option value="0">一月</option>
+                            <option value="1">二月</option>
+                            <option value="2">三月</option>
+                            <option value="3">四月</option>
+                            <option value="4">五月</option>
+                            <option value="5">六月</option>
+                            <option value="6">七月</option>
+                            <option value="7">八月</option>
+                            <option value="8">九月</option>
+                            <option value="9">十月</option>
+                            <option value="10">十一月</option>
+                            <option value="11">十二月</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="calendar" id="calendar">
+                    <!-- 月曆將在此顯示 -->
+                </div>
+            </section>
+
+            <!-- 常用網站 -->
+            <section class="websites-section card">
+                <div class="section-header">
+                    <h2>常用網站</h2>
+                    <button class="btn btn--primary btn--sm" id="addWebsiteBtn">新增</button>
+                </div>
+                <div class="websites-grid" id="websitesList">
+                    <!-- 網站快捷方式將在此顯示 -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 代辦事項編輯彈窗 -->
+    <div class="modal hidden" id="todoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="todoModalTitle">新增代辦事項</h3>
+                <button class="modal-close" id="closeTodoModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">代辦事項內容</label>
+                    <input type="text" class="form-control" id="todoText" placeholder="輸入代辦事項...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn--secondary" id="cancelTodo">取消</button>
+                <button class="btn btn--primary" id="saveTodo">儲存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 作業編輯彈窗 -->
+    <div class="modal hidden" id="assignmentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="assignmentModalTitle">新增作業</h3>
+                <button class="modal-close" id="closeAssignmentModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">作業名稱</label>
+                    <input type="text" class="form-control" id="assignmentName" placeholder="輸入作業名稱...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">繳交期限</label>
+                    <input type="date" class="form-control" id="assignmentDueDate">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn--secondary" id="cancelAssignment">取消</button>
+                <button class="btn btn--primary" id="saveAssignment">儲存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 網站編輯彈窗 -->
+    <div class="modal hidden" id="websiteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="websiteModalTitle">新增網站</h3>
+                <button class="modal-close" id="closeWebsiteModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">網站名稱</label>
+                    <input type="text" class="form-control" id="websiteName" placeholder="輸入網站名稱...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">網站網址</label>
+                    <input type="url" class="form-control" id="websiteUrl" placeholder="https://example.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">圖標</label>
+                    <input type="text" class="form-control" id="websiteIcon" placeholder="輸入Emoji或文字...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn--secondary" id="cancelWebsite">取消</button>
+                <button class="btn btn--primary" id="saveWebsite">儲存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 日程詳情彈窗 -->
+    <div class="modal hidden" id="eventModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 id="eventModalTitle">日程管理</h3>
+                <button class="modal-close" id="closeEventModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="event-timeline" id="eventTimeline">
+                    <!-- 時間軸將在此顯示 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增/編輯行程彈窗 -->
+    <div class="modal hidden" id="addEventModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="addEventModalTitle">新增行程</h3>
+                <button class="modal-close" id="closeAddEventModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">行程名稱</label>
+                    <input type="text" class="form-control" id="eventName" placeholder="輸入行程名稱...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">開始時間</label>
+                    <input type="time" class="form-control" id="eventStartTime">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">結束時間</label>
+                    <input type="time" class="form-control" id="eventEndTime">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">地點</label>
+                    <input type="text" class="form-control" id="eventLocation" placeholder="輸入地點...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">備註</label>
+                    <textarea class="form-control" id="eventNotes" rows="3" placeholder="輸入備註..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn--secondary" id="cancelEvent">取消</button>
+                <button class="btn btn--primary" id="saveEvent">儲存</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
